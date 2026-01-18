@@ -43,7 +43,8 @@ df_raw = load_data()
 
 
 # PM Display function
-def pm_display(ocel_data, df_filtered, object_or_event_filter):
+def pm_display(ocel_data, df_filtered, object_or_event_filter,
+              act_metric, edge_metric, time_op):
     # Filtering OCEL
     if object_or_event_filter == object_filter:
         ocel = pm4py.filter_ocel_object_attribute(ocel_data, "ocel:type", selected_filter, positive=True)
@@ -246,7 +247,8 @@ if df_raw is not None:
 
         
     # Display PM Diagram
-    pm_display(ocel_data, df_filtered, object_or_event_filter)
+    pm_display(ocel_data, df_filtered, object_or_event_filter,
+              act_metric, edge_metric, time_op)
 
 
 
@@ -303,4 +305,5 @@ if df_raw is not None:
     #         st.download_button("Download Count Diagram", f, "count_diagram.png")
     #     with open("diag_time.png", "rb") as f:
     #         st.download_button("Download Time Diagram", f, "time_diagram.png")
+
 
