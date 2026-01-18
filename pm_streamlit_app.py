@@ -42,54 +42,6 @@ def load_data():
 df_raw = load_data()
 
 
-# PM Display function
-def pm_display(ocel_data, df_filtered, object_or_event_filter,
-              act_metric, edge_metric, time_op):
-    # Filtering OCEL
-    if object_or_event_filter == object_filter:
-        ocel = pm4py.filter_ocel_object_attribute(ocel_data, "ocel:type", selected_filter, positive=True)
-    else:
-        ocel = pm4py.filter_ocel_start_events_per_object_type(ocel_data, selected_filter)
-        
-    ocel = pm4py.filter_ocel_event_attribute(ocel, "ocel:activity", final_activities, positive=True)
-    
-    # Discover & Visualize
-    ocdfg = pm4py.discover_ocdfg(ocel)
-    
-    # Save and display images
-    pm4py.save_vis_ocdfg(ocdfg, 'diag_count.png', annotation='frequency', act_metric=act_metric, edge_metric=edge_metric)
-    pm4py.save_vis_ocdfg(ocdfg, 'diag_time.png', annotation='performance', performance_aggregation=time_op, act_metric='events')
-    
-    st.subheader(" ")
-    st.subheader("Log Event Data Display")
-    st.dataframe(df_filtered.head(50))
-    
-    st.subheader("Process Mining - Events Count")
-    st.image("diag_count.png")
-    st.text("")
-    
-    st.subheader("Process Mining - Time Lapse")
-    st.image("diag_time.png")
-    st.text("")
-    st.markdown("Remark : Time displayed is the " + f"**{time_op}**" + " of the time taken.")
-    st.text("")
-
-    # Downloads
-    with open("diag_count.png", "rb") as f:
-        st.text("")
-        st.download_button("Download Count Diagram", f, "count_diagram.png")
-    with open("diag_time.png", "rb") as f:
-        st.download_button("Download Time Diagram", f, "time_diagram.png")
-        st.markdown("\n\n \n\n")
-
-    st.caption("Note on PM purposes: " +\
-        " ● Streamline an Order-to-Cash cycle or audit financial workflows, this app transforms raw event data into actionable insights for continuous process improvement. " +\
-        " ● Bottleneck & Variant Analysis: Identify _spaghetti_ processes and hidden delays where cases get stuck, helping you reduce cycle times and operational costs. " +\
-        " ● Conformance Checking: Compare real-world execution against your designed business models to flag deviations and ensure regulatory compliance. " +\
-        " ● Advanced Data Integration: Built on industry-standard libraries like PM4Py and Pandas, our app handles massive datasets with the flexibility of Python’s analytical ecosystem.\n"
-    )
-
-
 if df_raw is not None:
     st.title("Procure-to-Pay (P2P) Process Mining (PM) :pick:\n")
 
@@ -245,65 +197,52 @@ if df_raw is not None:
     elif object_or_event_filter == start_event_filter:
         selected_filter = selected_start_event
 
-        
-    # Display PM Diagram
-    pm_display(ocel_data, df_filtered, object_or_event_filter,
-              act_metric, edge_metric, time_op)
 
+    # # PM Display function
+    # def pm_display(ocel_data, df_filtered, object_or_event_filter,
+    #               act_metric, edge_metric, time_op):
+    # Filtering OCEL
+    if object_or_event_filter == object_filter:
+        ocel = pm4py.filter_ocel_object_attribute(ocel_data, "ocel:type", selected_filter, positive=True)
+    else:
+        ocel = pm4py.filter_ocel_start_events_per_object_type(ocel_data, selected_filter)
+        
+    ocel = pm4py.filter_ocel_event_attribute(ocel, "ocel:activity", final_activities, positive=True)
+    
+    # Discover & Visualize
+    ocdfg = pm4py.discover_ocdfg(ocel)
+    
+    # Save and display images
+    pm4py.save_vis_ocdfg(ocdfg, 'diag_count.png', annotation='frequency', act_metric=act_metric, edge_metric=edge_metric)
+    pm4py.save_vis_ocdfg(ocdfg, 'diag_time.png', annotation='performance', performance_aggregation=time_op, act_metric='events')
+    
+    st.subheader(" ")
+    st.subheader("Log Event Data Display")
+    st.dataframe(df_filtered.head(50))
+    
+    st.subheader("Process Mining - Events Count")
+    st.image("diag_count.png")
+    st.text("")
+    
+    st.subheader("Process Mining - Time Lapse")
+    st.image("diag_time.png")
+    st.text("")
+    st.markdown("Remark : Time displayed is the " + f"**{time_op}**" + " of the time taken.")
+    st.text("")
 
+    # Downloads
+    with open("diag_count.png", "rb") as f:
+        st.text("")
+        st.download_button("Download Count Diagram", f, "count_diagram.png")
+    with open("diag_time.png", "rb") as f:
+        st.download_button("Download Time Diagram", f, "time_diagram.png")
+        st.markdown("\n\n \n\n")
 
-
-    # # --- EXECUTION BUTTON ---
-    # if st.button("Generate Dashboard", type="primary"):
-    #     # OCEL Structuring Logic
-    #     df_ocel_prep = df_filtered.copy()
-    #     df_ocel_prep = df_ocel_prep.drop_duplicates().reset_index(drop=True)
-        
-    #     # Internal PM4PY Logic
-    #     df_ocel_prep['ocel:eid'] = 'e' + df_ocel_prep.index.astype(str)
-    #     df_ocel_prep = df_ocel_prep.rename(columns={
-    #         'date': 'ocel:timestamp',
-    #         'activity': 'ocel:activity',
-    #         'item_line': 'ocel:type:item',
-    #         'po_line': 'ocel:type:po',
-    #         'gr_line': 'ocel:type:gr',
-    #         'inv_line': 'ocel:type:inv',
-    #         'wf_line': 'ocel:type:wf'
-    #     })
-        
-    #     # Save temp file for PM4PY to read
-    #     df_ocel_prep.to_csv("temp_ocel.csv", index=False)
-    #     ocel = pm4py.read_ocel("temp_ocel.csv")
-        
-    #     # Filtering OCEL
-    #     if filter_type == 'Object Filter':
-    #         ocel = pm4py.filter_ocel_object_attribute(ocel, "ocel:type", selected_objects, positive=True)
-    #     else:
-    #         ocel = pm4py.filter_ocel_start_events_per_object_type(ocel, selected_start_event)
-            
-    #     ocel = pm4py.filter_ocel_event_attribute(ocel, "ocel:activity", final_activities, positive=True)
-        
-    #     # Discover & Visualize
-    #     ocdfg = pm4py.discover_ocdfg(ocel)
-        
-    #     # Save and display images
-    #     pm4py.save_vis_ocdfg(ocdfg, 'diag_count.png', annotation='frequency', act_metric=act_metric, edge_metric=edge_metric)
-    #     pm4py.save_vis_ocdfg(ocdfg, 'diag_time.png', annotation='performance', performance_aggregation=time_op, act_metric='events')
-        
-    #     st.subheader("Log Event Data")
-    #     st.dataframe(df_filtered.head(50))
-        
-    #     st.subheader("Process Mining - Events Count")
-    #     st.image("diag_count.png")
-        
-    #     st.subheader("Process Mining - Time Lapse")
-    #     st.image("diag_time.png")
-    #     st.markdown("Remark : Time displayed is the " + f"**{time_op}**" + " of the time taken.")
-
-    #     # Downloads
-    #     with open("diag_count.png", "rb") as f:
-    #         st.download_button("Download Count Diagram", f, "count_diagram.png")
-    #     with open("diag_time.png", "rb") as f:
-    #         st.download_button("Download Time Diagram", f, "time_diagram.png")
+    st.caption("Note on PM purposes: " +\
+        " ● Streamline an Order-to-Cash cycle or audit financial workflows, this app transforms raw event data into actionable insights for continuous process improvement. " +\
+        " ● Bottleneck & Variant Analysis: Identify _spaghetti_ processes and hidden delays where cases get stuck, helping you reduce cycle times and operational costs. " +\
+        " ● Conformance Checking: Compare real-world execution against your designed business models to flag deviations and ensure regulatory compliance. " +\
+        " ● Advanced Data Integration: Built on industry-standard libraries like PM4Py and Pandas, our app handles massive datasets with the flexibility of Python’s analytical ecosystem.\n"
+    )
 
 
