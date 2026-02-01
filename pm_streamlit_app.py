@@ -165,10 +165,10 @@ if df_raw is not None:
         edge_metric = st.radio("Edge Metric", 
                                ['unique_objects', 'event_couples'], 
                                index=0)
-    with col3:
-        time_op = st.radio("Time Metric", 
-                           ['mean', 'sum'],
-                           index=0)
+    # with col3:
+    #     time_op = st.radio("Time Metric", 
+    #                        ['mean', 'sum'],
+    #                        index=0)
         
     # OCEL Structuring Logic
     df_ocel_prep = df_filtered.copy()
@@ -200,7 +200,7 @@ if df_raw is not None:
 
     # # PM Display function
     # def pm_display(ocel_data, df_filtered, object_or_event_filter,
-    #               act_metric, edge_metric, time_op):
+    #               act_metric, edge_metric):
     # Filtering OCEL
     if object_or_event_filter == object_filter:
         ocel = pm4py.filter_ocel_object_attribute(ocel_data, "ocel:type", selected_filter, positive=True)
@@ -214,7 +214,7 @@ if df_raw is not None:
     
     # Save and display images
     pm4py.save_vis_ocdfg(ocdfg, 'diag_count.png', annotation='frequency', act_metric=act_metric, edge_metric=edge_metric)
-    pm4py.save_vis_ocdfg(ocdfg, 'diag_time.png', annotation='performance', performance_aggregation=time_op, act_metric='events')
+    pm4py.save_vis_ocdfg(ocdfg, 'diag_time.png', annotation='performance', act_metric='events') # performance_aggregation=time_op
     
     st.subheader(" ")
     st.subheader("Log Event Data Display")
@@ -227,8 +227,8 @@ if df_raw is not None:
     st.subheader("Process Mining - Time Lapse")
     st.image("diag_time.png")
     st.text("")
-    st.markdown("Remark : Time displayed is the " + f"**{time_op}**" + " of the time taken.")
-    st.text("")
+    # st.markdown("Remark : Time displayed is the " + f"**{time_op}**" + " of the time taken.")
+    # st.text("")
 
     # Downloads
     with open("diag_count.png", "rb") as f:
@@ -244,5 +244,6 @@ if df_raw is not None:
         " ● Conformance Checking: Compare real-world execution against your designed business models to flag deviations and ensure regulatory compliance. " +\
         " ● Advanced Data Integration: Built on industry-standard libraries like PM4Py and Pandas, our app handles massive datasets with the flexibility of Python’s analytical ecosystem.\n"
     )
+
 
 
