@@ -155,7 +155,7 @@ if df_raw is not None:
                 "This is displayed in the boxes as _**UO=n**_ or _**E=n**_ .") 
     st.markdown("**Edge metric selection**: Display either the number of events couplings or the number of SKU items / documents flowing between processes. " + 
                 "This is displayed on top of arrows as _**UO=n**_ or _**EC=n**_ .")
-    st.markdown("**Time metric selection**: Display either the **mean** or the **sum** of time taken between processes in the **Time Lapse diagram**. ")
+    # st.markdown("**Time metric selection**: Display either the **mean** or the **sum** of time taken between processes in the **Time Lapse diagram**. ")
     col1, col2, col3 = st.columns(3)
     with col1:
         act_metric = st.radio("Activity Metric", 
@@ -244,6 +244,7 @@ if df_raw is not None:
         " ● Conformance Checking: Compare real-world execution against your designed business models to flag deviations and ensure regulatory compliance. " +\
         " ● Advanced Data Integration: Built on industry-standard libraries like PM4Py and Pandas, our app handles massive datasets with the flexibility of Python’s analytical ecosystem.\n"
     )
+
 
 
 
